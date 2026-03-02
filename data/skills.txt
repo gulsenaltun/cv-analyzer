@@ -1,0 +1,14 @@
+python
+sql
+machine learning
+deep learning
+docker
+aws
+react
+flask
+django
+tensorflow
+pandas
+numpy
+git
+linux
