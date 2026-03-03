@@ -4,6 +4,7 @@ from utils.similarity import calculate_similarity
 from utils.skills import load_skills, extract_skills, find_missing_skills
 from utils.recommender import generate_recommendations
 from utils.feedback import generate_feedback
+from utils.improvement import generate_improvements
 
 st.set_page_config(page_title="AI Resume Analyzer")
 
@@ -31,15 +32,40 @@ if st.button("Analyze Resume"):
             
             missing_skills = find_missing_skills(cv_skills, job_skills)
             recommendations = generate_recommendations(missing_skills)
+            
+            st.write("### 📊 Skill Match Analysis")
 
-            st.write("AI Recommendations")
+            total_skills = max(len(job_skills), 1)
+            skill_match_percent = (len(cv_skills) / total_skills) * 100
+
+            st.progress(int(skill_match_percent))
+
+            st.write(f"Skill Match: {round(skill_match_percent,2)}%")
+
+            st.write("### AI Recommendations")
             for rec in recommendations:
                 st.write("👉", rec)
             
             ats_score = score * 0.7 + (len(cv_skills) / max(len(job_skills), 1)) * 30
             feedback = generate_feedback(ats_score, missing_skills)
-
             st.write("### 🧑‍💼 Recruiter Feedback")
+
+            improvements = generate_improvements(missing_skills)
+
+            improvements = generate_improvements(missing_skills)
+
+            st.write("###  Recruiter Decision")
+            if ats_score > 80:
+                st.success("Recommended for Interview ✅")
+            elif ats_score > 60:
+                st.warning("Consider After Improvements ⚠️")
+            else:
+                st.error("Not Recommended ❌")
+
+            st.write("### How To Improve Your CV")
+
+            for imp in improvements:
+                st.write("👉", imp)
 
             for f in feedback:
                 st.write("✔", f)
