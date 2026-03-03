@@ -2,6 +2,8 @@ import streamlit as st
 from utils.pdf_reader import extract_text_from_pdf
 from utils.similarity import calculate_similarity
 from utils.skills import load_skills, extract_skills, find_missing_skills
+from utils.recommender import generate_recommendations
+from utils.feedback import generate_feedback
 
 st.set_page_config(page_title="AI Resume Analyzer")
 
@@ -28,8 +30,19 @@ if st.button("Analyze Resume"):
             job_skills = extract_skills(job_description.lower(), skills)
             
             missing_skills = find_missing_skills(cv_skills, job_skills)
+            recommendations = generate_recommendations(missing_skills)
+
+            st.write("AI Recommendations")
+            for rec in recommendations:
+                st.write("👉", rec)
             
             ats_score = score * 0.7 + (len(cv_skills) / max(len(job_skills), 1)) * 30
+            feedback = generate_feedback(ats_score, missing_skills)
+
+            st.write("### 🧑‍💼 Recruiter Feedback")
+
+            for f in feedback:
+                st.write("✔", f)
             
             col1, col2 = st.columns(2)
             with col1:

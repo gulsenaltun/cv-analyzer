@@ -13,3 +13,4 @@ def calculate_similarity(cv_text, job_text):
     )[0][0]
 
     return round(similarity * 100, 2)
+
